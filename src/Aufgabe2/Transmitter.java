@@ -1,41 +1,61 @@
 package Aufgabe2;
 
 public class Transmitter {
-  public Double x, y;
-  public Distance transmittingPower;
+  private double x, y;
+  private double distance = 0.0;
+  private String name;
 
-  Transmitter(Double x, Double y) {
+  Transmitter(String name, double x, double y) {
+    this.name = name;
     this.x = x;
     this.y = y;
   }
 
-  Transmitter(Double x, Double y, Distance transmittingPower) {
+  Transmitter(String name, double x, double y, double distance) {
+    this.name = name;
     this.x = x;
     this.y = y;
-    this.transmittingPower = transmittingPower;
+    this.distance = distance;
   }
 
-  public Double getX() {
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public double getX() {
     return x;
   }
 
-  public void setX(Double x) {
+  public void setX(double x) {
     this.x = x;
   }
 
-  public Double getY() {
+  public double getY() {
     return y;
   }
 
-  public void setY(Double y) {
+  public void setY(double y) {
     this.y = y;
   }
 
-  public Double getTransmittingPower() {
-    return transmittingPower.getDistance();
+  public double getDistance() {
+    return distance;
   }
 
-  public void setTransmittingPower(Distance transmittingPower) {
-    this.transmittingPower = transmittingPower;
+  public void setDistance(double distance) {
+    this.distance = distance;
+  }
+
+  @Override
+  public String toString() {
+    return  '{' + "" +
+            name + " " +
+            "x=" + x +
+            ", y=" + y +
+            '}';
   }
 }
