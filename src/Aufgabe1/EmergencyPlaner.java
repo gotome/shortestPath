@@ -33,6 +33,7 @@ import org.jgrapht.nio.ExportException;
 import org.jgrapht.nio.dot.DOTExporter;
 
 public final class EmergencyPlaner {
+    //walk weight calculator (used for concat paths)
     private static final Function<GraphWalk<Vertex, DefaultWeightedEdge>, Double> walkWeightCalculator = (graphWalk) -> {
         return graphWalk.getEdgeList().stream().flatMapToDouble((edge) -> {
             return DoubleStream.of(graphWalk.getGraph().getEdgeWeight(edge));
@@ -42,6 +43,18 @@ public final class EmergencyPlaner {
     private EmergencyPlaner() {
     }
 
+    /**
+     * Create graph
+     *
+     * @param edges graph edges
+     * @param hospitals hospital nodes
+     * @param ambulances ambulance nodes
+     * @param ambulanceStatus ambulance status
+     * @param accidents accident nodes
+     * @param weights edge weights
+     *
+     * @return Graph<Vertex, DeafaultWeightedEdge> simple weighted graph
+     */
     private static Graph<Vertex, DefaultWeightedEdge> createVertexGraph(Integer[][] edges, Integer[] hospitals, Integer[] ambulances, Integer[] ambulanceStatus, Integer[] accidents, Double[] weights) {
         Graph<Vertex, DefaultWeightedEdge> g = new SimpleWeightedGraph(DefaultWeightedEdge.class);
         int srcIndex = 0;
@@ -63,12 +76,24 @@ public final class EmergencyPlaner {
                     Graphs.addEdge(g, fromVertex, toVertex, currWeight);
                 }
             }
-
         }
 
         return g;
     }
 
+    /**
+     * Initialise the graph with the propper vertices
+     *
+     * Following nodes are available:
+     *  - standard
+     *  - ambulance
+     *  - hospital
+     *  - accident
+     *
+     * @param g graph
+     *
+     * @return a set with all initialised verticses
+     */
     private static Set<Vertex> getVertices(Integer index, Integer[] accidents, Integer[] hospitals, Integer[] ambulance, Integer[] ambulanceStatus) {
         Set<Vertex> vertices = new HashSet();
 
@@ -110,6 +135,15 @@ public final class EmergencyPlaner {
         }
     }
 
+    /**
+     * This method computes all neccessary walks for the
+     * accident scene. You will get a path for each accident
+     * from a ambulance to an accident.
+     *
+     * @param g graph
+     *
+     * @return map with all shortest accident paths
+     */
     public static Map<Vertex, Path> computeWalks(Graph<Vertex, DefaultWeightedEdge> g) {
         Map<Vertex, Path> emergencyWalks = new Hashtable();
         List<Vertex> hospitals = (List)g.vertexSet().stream().filter((v) -> {
@@ -171,6 +205,18 @@ public final class EmergencyPlaner {
 
         return emergencyWalks;
     }
+
+    /**
+     * prints path/ walk statistiks to console
+     *
+     * @param hospitals hospitals
+     * @param ambulance current ambulance
+     * @param accident current accident
+     * @param dijkstraShortestPath dijkstra shortest path
+     * @param ambulanceStatus ambulance status
+     *
+     * @return shortest for ambulance path to an accident
+     */
     // TODO dieser Code wurde durch recompile erzeugt ! Muss noch refactored werden !
     private static GraphWalk<Vertex, DefaultWeightedEdge> shortestPathForAmbulance(List<Vertex> hospitals, Vertex ambulance, Vertex accident, DijkstraShortestPath<Vertex, DefaultWeightedEdge> dijkstraShortestPath, int ambulanceStatus) {
         GraphWalk<Vertex, DefaultWeightedEdge> shortestPath = null;
@@ -208,6 +254,12 @@ public final class EmergencyPlaner {
         }
     }
 
+    /**
+     * prints path/ walk statistiks to console
+     *
+     * @param foundPaths all found paths
+     *
+     */
     public static void printWalks(Map<Vertex, Path> foundPaths) {
         for (Entry<Vertex, Path> element: foundPaths.entrySet()) {
             double totalWeight = ((Path)element.getValue()).getPath().getWeight() + ((Path)element.getValue()).getExtraCosts();
@@ -220,6 +272,12 @@ public final class EmergencyPlaner {
         }
     }
 
+    /**
+     * render graph for a better visualization
+     *
+     * @param graph given graph
+     *
+     */
     private static void renderGraph(Graph<Vertex, DefaultWeightedEdge> graph) throws ExportException {
         DOTExporter<Vertex, DefaultWeightedEdge> exporter = new DOTExporter<>(v -> v.getDesignation());
 
@@ -242,6 +300,14 @@ public final class EmergencyPlaner {
         System.out.println(writer.toString());
     }
 
+    /**
+     * rendering emergency paths
+     *
+     * @param graph given graph
+     * @param path emergency paths
+     *
+     * @return Stack<Transmitter> with the graph nodes
+     */
     private static void renderEmergencyPaths(Graph<Vertex, DefaultWeightedEdge> graph, Path path) throws ExportException {
         DOTExporter<Vertex, DefaultWeightedEdge> exporter = new DOTExporter<>(v -> v.getDesignation());
 
