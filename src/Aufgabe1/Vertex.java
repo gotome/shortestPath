@@ -1,12 +1,15 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
 package Aufgabe1;
 
 import java.util.Objects;
 
 public class Vertex {
   private String designation;
-  //
   private VertexDefinition definition;
-  //status -> 0...free, 1...paused, 2...in process, 3...not available
   private int status;
 
   public Vertex(String designation, VertexDefinition definition) {
@@ -21,7 +24,7 @@ public class Vertex {
   }
 
   public String getDesignation() {
-    return designation;
+    return this.designation;
   }
 
   public void setDesignation(String designation) {
@@ -29,7 +32,7 @@ public class Vertex {
   }
 
   public VertexDefinition getDefinition() {
-    return definition;
+    return this.definition;
   }
 
   public void setDefinition(VertexDefinition definition) {
@@ -37,7 +40,7 @@ public class Vertex {
   }
 
   public int getStatus() {
-    return status;
+    return this.status;
   }
 
   public void setStatus(int status) {
@@ -46,7 +49,7 @@ public class Vertex {
 
   public String getStatusColor() {
     String color = "";
-    switch (this.definition) {
+    switch(this.definition) {
       case ACCIDENT:
         color = "RED";
         break;
@@ -58,28 +61,27 @@ public class Vertex {
         break;
       case STANDARD:
         color = "GRAY";
-        break;
     }
+
     return color;
   }
 
-  @Override
   public String toString() {
     return this.designation;
   }
 
-  @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Vertex vertex = (Vertex) o;
-    return status == vertex.status &&
-            Objects.equals(designation, vertex.designation) &&
-            definition == vertex.definition;
+    if (this == o) {
+      return true;
+    } else if (o != null && this.getClass() == o.getClass()) {
+      Vertex vertex = (Vertex)o;
+      return this.status == vertex.status && Objects.equals(this.designation, vertex.designation) && this.definition == vertex.definition;
+    } else {
+      return false;
+    }
   }
 
-  @Override
   public int hashCode() {
-    return Objects.hash(designation, definition, status);
+    return Objects.hash(new Object[]{this.designation, this.definition, this.status});
   }
 }
