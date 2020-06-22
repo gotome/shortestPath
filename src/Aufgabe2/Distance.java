@@ -7,7 +7,6 @@ public class Distance {
     if (a == null && b == null) {
       throw new NoSuchElementException("nullpointer exception check transmiter objects");
     }
-
     return Math.sqrt(Math.pow(a.getX() - b.getX(), 2) + Math.pow(a.getY() - b.getY() , 2));
   }
 }
