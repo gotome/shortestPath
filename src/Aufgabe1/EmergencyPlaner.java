@@ -90,7 +90,11 @@ public final class EmergencyPlaner {
      *  - hospital
      *  - accident
      *
-     * @param g graph
+     * @param index current node index
+     * @param accidents accident nodes
+     * @param hospitals hospital nodes
+     * @param ambulance ambulance nodes
+     * @param ambulanceStatus ambulance status
      *
      * @return a set with all initialised verticses
      */
